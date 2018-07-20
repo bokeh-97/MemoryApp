@@ -54,7 +54,7 @@ public class DBHelper extends SQLiteOpenHelper {
        cal.add(Calendar.MINUTE,2);
         String first_rem = dateformat.format(cal.getTime());
         Log.d(TAG,"first rem:"+first_rem);
-        Log.
+
 
 
 
@@ -105,11 +105,10 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.rawQuery("Select * from questionbank where id = ?",new String[]{String.valueOf(id)});
-        //Log.d(TAG,"remindr time : " + cursor.getString(cursor.getColumnIndex("remindertime")));
-        if(cursor==null){Log .d(TAG,"id not found:");return "2018-07-19T16:33:00Z";}
-        else {Log.d(TAG,"cursor found");
-        Log.d(TAG,"id found == > "+cursor.getString(0));
-        return "ABC";}
+        cursor.moveToFirst();
+        Log.d(TAG,"rem time with id"+id+cursor.getString(3));
+        String remTime = cursor.getString(3);
+        return remTime;
 
     }
 
@@ -125,8 +124,7 @@ public class DBHelper extends SQLiteOpenHelper {
             if (compareTime(min, cursor.getString(3)) == true) {
                 min = cursor.getString(3);
                 id = Integer.parseInt(cursor.getString(0));
-
-            }
+          }
       }
       Log.d(TAG,"id of min"+id);
       return id;
