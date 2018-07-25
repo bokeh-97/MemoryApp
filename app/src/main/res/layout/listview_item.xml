@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+   android:elevation="6dp"
+    android:background="#ffe46a">
+    <TextView
+        android:id="@+id/_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="#ae65f2"
+        android:textColor="#ffffff"
+
+
+        android:textStyle="bold"/>
+  <Switch
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:id="@+id/CheckBox"
+      android:layout_marginTop="5dp"
+      android:checked="true"
+      android:layout_alignParentTop="true"
+      android:layout_alignParentRight="true"
+/>
+    <TextView
+        android:id="@+id/_question"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+   android:layout_below="@id/_id"
+        android:padding="10dp"
+        android:layout_marginTop="15dp"
+        android:background="#ffe46a"
+        android:textColor="#151414"
+        android:textAlignment="center"
+        />
+    <TextView
+        android:id="@+id/_answer"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_below="@id/_question"
+        android:background="#ffe46a"
+        android:textColor="#e20a0a"
+        android:textAlignment="center"
+        android:padding="5dp"
+        android:textSize="17sp"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/_reminder_set"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/_answer"
+        android:textColor="#ffe46a"
+        />
+
+
+
+</RelativeLayout>

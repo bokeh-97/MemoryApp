@@ -18,7 +18,7 @@
         android:textSize="25sp"
         android:textStyle="bold"
         android:textAllCaps="true"
-        android:text="what is the chemical name of bleach ?"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <EditText
@@ -28,6 +28,12 @@
         android:layout_marginTop="25dp"
         android:layout_gravity="center"
         android:hint="Your answer"
+        android:imeOptions="actionDone"
         />
+<Button
+    android:id="@+id/answerCheck"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="CHECK "/>
 
 </LinearLayout>

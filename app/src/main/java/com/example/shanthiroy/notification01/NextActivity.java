@@ -1,33 +1,132 @@
 package com.example.shanthiroy.notification01;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import static com.example.shanthiroy.notification01.MainActivity.currentRemId;
 import static com.example.shanthiroy.notification01.MainActivity.question;
 import static java.util.Calendar.*;
 
 public class NextActivity extends AppCompatActivity {
     DBHelper myDBHelper;
     String TAG = "NextActivity";
+    TextView questionReminder;
+    EditText answerReminder;
+    int currentID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+       Intent i =getIntent();
+     currentID =  i.getIntExtra("currentID",0);
+       Log.d(TAG,"current id : "+currentID);
+        myDBHelper = new DBHelper(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_next);
-        TextView questionReminder = (TextView) findViewById(R.id.questionReminder);
-        EditText answerReminder = (EditText)findViewById(R.id.answerReminder);
 
-        myDBHelper = new DBHelper(this);
-        //Cursor c = myDBHelper.PullTable();
-       // questionReminder.setText(c.getString(1));
+        questionReminder = (TextView) findViewById(R.id.questionReminder);
+        questionReminder.setText(myDBHelper.getQuestion(currentID));
+        answerReminder = (EditText)findViewById(R.id.answerReminder);
+        Button answerCheck = (Button)findViewById(R.id.answerCheck);
+        answerCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                Log.d(TAG,"currentID : "+currentID);
+                String correctAnswer = myDBHelper.getAnswer(currentID);
+                Log.d(TAG,"correct answer"+correctAnswer);
+                Log.d(TAG,"answerReminder.getText().toString() "+answerReminder.getText().toString());
+                if(correctAnswer.equals(answerReminder.getText().toString())) {
+
+
+                    Toast.makeText(getApplicationContext(), "Correct Answer. Next reminder in 3 mins", Toast.LENGTH_SHORT).show();
+                    // cancel existing alarm
+
+                    Intent notifyIntent_N = new Intent(NextActivity.this,MyReceiver.class);
+
+                    PendingIntent pendingIntent_N = PendingIntent.getService
+                            (getApplicationContext(), currentID+1000, notifyIntent_N, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    Log.d(TAG,"PENDING INTENT CREATER UID = "+ pendingIntent_N.getCreatorUid());
+
+                    AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+
+                    try{alarmManager.cancel(pendingIntent_N);}
+                    catch (Exception e) {
+                        Log.e(TAG, "AlarmManager update was not canceled. " + e.toString());
+                    }
+                    // check if cancelled
+                    boolean alarmUp = (PendingIntent.getBroadcast(getApplicationContext(), currentID + 1000,
+                            new Intent(getApplicationContext(), MyReceiver.class),
+                            PendingIntent.FLAG_NO_CREATE) != null);
+                    Log.d(TAG,"alarm exists ? :" + alarmUp);
+
+                    //update rem time to +30 mins from current system time
+                    myDBHelper.updateRemtime(currentID,3);
+
+
+
+                    AlarmChecker alarmchecker = new AlarmChecker(getApplicationContext());
+                    alarmchecker.SetAllAlarms();
+
+ }
+                else{
+                    //update rem time to +10mins from current system time
+                    Log.d(TAG,"mcurrentid in else"+currentID);
+                    Toast.makeText(getApplicationContext(), "Wrong Answer. [ Correct answer :"+correctAnswer+" Next Rem in 1 min", Toast.LENGTH_SHORT).show();
+
+                    // cancel existing alarm
+
+                    Intent notifyIntent_N = new Intent(NextActivity.this,MyReceiver.class);
+
+                    PendingIntent pendingIntent_N = PendingIntent.getService
+                            (getApplicationContext(), currentID+1000, notifyIntent_N, PendingIntent.FLAG_UPDATE_CURRENT);
+                    Log.d(TAG,"PENDING INTENT CREATER UID = "+pendingIntent_N.getCreatorUid());
+
+
+                    AlarmManager alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+                    try{alarmManager.cancel(pendingIntent_N);}
+                    catch (Exception e) {
+                        Log.e(TAG, "AlarmManager update was not canceled. " + e.toString());
+                    }
+
+                    // check if cancelled
+                    boolean alarmUp = (PendingIntent.getBroadcast(getApplicationContext(), currentID + 1000,
+                            new Intent(getApplicationContext(), MyReceiver.class),
+                            PendingIntent.FLAG_NO_CREATE) != null);
+                    Log.d(TAG,"alarm exists ? :" + alarmUp);
+
+                    //update rem time to +10 mins from current system time
+                    myDBHelper.updateRemtime(currentID,1);
+
+                    AlarmChecker alarmchecker = new AlarmChecker(getApplicationContext());
+                     alarmchecker.SetAllAlarms();
+
+                }
+
+            }
+        });
+
+
+
 
         /* date to string to date
 
@@ -60,7 +159,6 @@ public class NextActivity extends AppCompatActivity {
         Log.d(TAG,"mins::"+(mins));
 
         */
-
 
 
 

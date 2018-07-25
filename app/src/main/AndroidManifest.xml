@@ -28,7 +28,8 @@
             android:name=".MyNewIntentService"
             android:exported="false" />
 
-        <activity android:name=".NextActivity"></activity>
+        <activity android:name=".NextActivity" />
+        <activity android:name=".Dashboard"></activity>
     </application>
 
 </manifest>

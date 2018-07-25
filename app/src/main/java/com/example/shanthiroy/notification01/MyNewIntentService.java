@@ -12,10 +12,16 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.RemoteInput;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+
+import static com.example.shanthiroy.notification01.MainActivity.currentRemId;
 import static com.example.shanthiroy.notification01.MainActivity.question;
 
 public class MyNewIntentService extends IntentService {
-    private static final int NOTIFICATION_ID = 3;
+    DBHelper mDBHelper;
+
+    String TAG = "MyNewIntentService";
+   // final static String GROUP_KEY_EMAILS = "group_key_emails";
 
     public MyNewIntentService() {
         super("MyNewIntentService");
@@ -23,6 +29,9 @@ public class MyNewIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        Log.d(TAG,"onHandleIntent");
+        int currentID = intent.getIntExtra("currentID",0);
+        Log.d(TAG,"current id : "+currentID);
 
       //  String KEY_REPLY = "key_reply";
        // Notification.Builder builder = new Notification.Builder(this);
@@ -39,9 +48,13 @@ public class MyNewIntentService extends IntentService {
 //        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
 //        managerCompat.notify(NOTIFICATION_ID, notificationCompat);
 
-        Intent intent2 = new Intent(getApplicationContext(),NextActivity.class);
+        mDBHelper = new DBHelper(this);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, intent2, 0);
+
+        Intent intent2 = new Intent(getApplicationContext(),NextActivity.class);
+        intent2.putExtra("currentID",currentID);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, currentID+3000, intent2, 0);
 
 //        String replyLabel = "Enter your reply here";
 //
@@ -60,21 +73,24 @@ public class MyNewIntentService extends IntentService {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 
-        builder.setAutoCancel(false);
+        builder.setAutoCancel(true);
         builder.setTicker("this is ticker text");
-        builder.setContentTitle(question);
+        builder.setContentTitle(mDBHelper.getQuestion(currentID));
         builder.setContentText("Click to answer");
         builder.setSmallIcon(R.drawable.ic_add_alert_black_24dp);
         builder.setContentIntent(pendingIntent);
         builder.setOngoing(true);
         builder.setSubText(" ");   //API level 16
         builder.setNumber(100);
+       // builder.setGroup(GROUP_KEY_EMAILS);
         builder.build();
+
+
         //builder.addAction(replyAction);
 
        Notification notificationCompat =builder.build();
         NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
-        managerCompat.notify(NOTIFICATION_ID, notificationCompat);
+        managerCompat.notify(currentID+100, notificationCompat);
 
 
 
