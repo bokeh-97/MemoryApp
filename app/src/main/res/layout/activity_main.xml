@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/wallpaper4"
     tools:context=".MainActivity">
 
     <Button
@@ -15,8 +16,9 @@
         android:layout_marginEnd="75dp"
         android:layout_marginStart="75dp"
         android:layout_marginTop="37dp"
-        android:background="#a03ed687"
+        android:background="#b73ed687"
         android:text="GO TO DASHBOARD"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -24,14 +26,13 @@
 
     <ImageView
         android:id="@+id/aa"
-        android:layout_width="306dp"
-        android:layout_height="336dp"
+        android:layout_width="360dp"
+        android:layout_height="345dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="48dp"
-        android:background="@drawable/note2"
+        android:background="@drawable/stickynote5"
         android:orientation="vertical"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dashboard_button">
@@ -41,42 +42,67 @@
 
     <EditText
         android:id="@+id/questionBox"
-        android:layout_width="131dp"
+        android:layout_width="140dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="88dp"
+        android:layout_marginTop="108dp"
         android:background="#ffffff"
         android:backgroundTint="@android:color/transparent"
-        android:hint="Enter question"
-        android:imeOptions="actionDone"
+        android:hint="Type your question"
+        android:inputType="textMultiLine"
+
+
         android:textColor="#5c0606"
+
+
+        android:textColorHint="#d9c75c"
         android:textSize="20sp"
         android:textStyle="bold"
+
 
         app:layout_constraintEnd_toEndOf="@+id/aa"
         app:layout_constraintStart_toStartOf="@+id/aa"
         app:layout_constraintTop_toTopOf="@+id/aa" />
 
+    <ImageView
+        android:id="@+id/editPen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="116dp"
+        android:src="@drawable/ic_edit_black_24dp"
+        app:layout_constraintEnd_toStartOf="@+id/questionBox"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/aa"
+        app:layout_constraintTop_toTopOf="@+id/aa" />
+
     <EditText
         android:id="@+id/answerBox"
-        android:layout_width="114dp"
-        android:layout_height="wrap_content"
+        android:layout_width="162dp"
+        android:layout_height="32dp"
         android:layout_gravity="center"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="2dp"
-        android:background="#ffffff"
+        android:background="@android:color/transparent"
+        android:textColorHint="#d9c75c"
+
+        android:hint=" ANSWER"
+        android:backgroundTint="#ffffff"
         android:imeOptions="actionDone"
-        android:hint="-- ANSWER--"
+        android:inputType="text"
+        android:lines="3"
+
         android:textColor="#140583"
         app:layout_constraintBottom_toTopOf="@+id/reminderButton"
         app:layout_constraintEnd_toEndOf="@+id/aa"
         app:layout_constraintStart_toStartOf="@+id/aa"
         app:layout_constraintTop_toBottomOf="@+id/questionBox"
-        app:layout_constraintVertical_bias="0.113" />
+        app:layout_constraintVertical_bias="0.27" />
 
     <Button
         android:id="@+id/reminderButton"
@@ -87,7 +113,9 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="SET REMINDER"
+        android:background="#e972bf"
+        android:text=" SET REMINDER "
+        android:padding="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

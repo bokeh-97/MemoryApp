@@ -12,21 +12,22 @@ public class AlarmSetter {
     String TAG = "AlarmSetter";
 
     Context context;
-    void setContext(Context context){
+
+    void setContext(Context context) {
         this.context = context;
 
     }
 
-    boolean setAlarm(Calendar cal, int id){
+    boolean setAlarm(Calendar cal, int id) {
 
-        Intent notifyIntent = new Intent(context,MyReceiver.class);
-        notifyIntent.putExtra("currentID",id);
+        Intent notifyIntent = new Intent(context, MyReceiver.class);
+        notifyIntent.putExtra("currentID", id);
 //        context.sendBroadcast(notifyIntent);
-        Log.d(TAG,"currentID  : "+id);
+        Log.d(TAG, "currentID  : " + id);
 
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast
-                (context, id+1000, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                (context, id + 1000, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -34,7 +35,7 @@ public class AlarmSetter {
                 cal.getTimeInMillis(), pendingIntent);
 
 
-    //if alarm setting happened return true, else return false
+        //if alarm setting happened return true, else return false
         return true;
     }
 

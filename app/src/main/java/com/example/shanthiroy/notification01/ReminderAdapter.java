@@ -1,10 +1,17 @@
 package com.example.shanthiroy.notification01;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -47,7 +54,10 @@ public class ReminderAdapter extends BaseAdapter {
             holder.id = (TextView)convertView.findViewById(R.id._id);
             holder.question = (TextView)convertView.findViewById(R.id._question);
             holder.answer = (TextView)convertView.findViewById(R.id._answer);
-            holder.reminder_set = (TextView)convertView.findViewById(R.id._reminder_set);
+            holder.reminder_delete = (Button) convertView.findViewById(R.id.reminder_delete);
+
+
+
 
 
             convertView.setTag(holder);
@@ -56,12 +66,33 @@ public class ReminderAdapter extends BaseAdapter {
             holder = (ViewHolder)convertView.getTag();
         }
 
-        Reminder_item rem_item = reminder_list.get(position);
+        final Reminder_item rem_item = reminder_list.get(position);
         holder.id.setText(rem_item.getId());
         holder.question.setText(rem_item.getQuestion());
         holder.answer.setText(rem_item.getAnswer());
+        holder.reminder_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               DBHelper mDBHelper  = new DBHelper(context);
+               mDBHelper.deleteReminder(Integer.parseInt(rem_item.getId()));
+                Intent notifyIntent_N = new Intent(context,MyReceiver.class);
 
-        holder.reminder_set.setText(rem_item.getReminderSet());
+                PendingIntent pendingIntent_N = PendingIntent.getService
+                        (context, Integer.parseInt(rem_item.getId())+1000, notifyIntent_N, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+                AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                try{alarmManager.cancel(pendingIntent_N);}
+                catch (Exception e) {
+
+                }
+             }
+        });
+
+
+
+
+
 
 
         return convertView;
@@ -71,7 +102,9 @@ public class ReminderAdapter extends BaseAdapter {
         public TextView id;
         public TextView question;
         public TextView answer;
-        public TextView reminder_set;
+        public Button reminder_delete;
+
+
 
     }
 }

@@ -3,6 +3,8 @@ package com.example.shanthiroy.notification01;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.text.ParseException;
@@ -12,7 +14,7 @@ import java.util.Date;
 
 public class AlarmChecker {
     public Context context;
-    public String TAG =  "AlarmChecker";
+    public String TAG = "AlarmChecker";
     final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
     DBHelper mDBHelper;
 
@@ -20,10 +22,6 @@ public class AlarmChecker {
     public AlarmChecker(Context context) {
         this.context = context;
     }
-
-
-
-
 
 
     // Check if alarm is set
@@ -37,12 +35,17 @@ public class AlarmChecker {
 
     // check all rows
 
-    public void SetAllAlarms(){
+    public void SetAllAlarms() {
         mDBHelper = new DBHelper(context);
-        for(int i=1;i<=mDBHelper.getRowCount();i++){
-            if(!AlarmSet(i)){
 
-                Log.d(TAG,"alarm not set at id =" + i);
+
+        for (int j = 0; j < mDBHelper.getRowCount(); j++) {
+            // change this
+            int i = mDBHelper.getIdFromPos(j);
+
+            if (!AlarmSet(i)) {
+
+                Log.d(TAG, "alarm not set at id =" + i);
                 String alarmtime = mDBHelper.remTimeFromId(i);
 
                 // convert alarmtime (String) to calendar object
@@ -50,27 +53,22 @@ public class AlarmChecker {
 
                 try {
                     date = format.parse(alarmtime);
-                    Log.d(TAG,"String to date :"+(date));
+                    Log.d(TAG, "String to date :" + (date));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                Log.d(TAG,"Reminder time :"+(date));
+                Log.d(TAG, "Reminder time :" + (date));
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(date);
-                Log.d(TAG,"alarm set for : id =  "+ i + "time :" + cal);
+                Log.d(TAG, "alarm set for : id =  " + i + "time :" + cal);
                 AlarmSetter alarmsetter = new AlarmSetter();
                 alarmsetter.setContext(context);
 
-                alarmsetter.setAlarm(cal,i);
-
-
-
-
-            }
-            else
-                Log.d(TAG,"alarm already set : id =="+i);
+                alarmsetter.setAlarm(cal, i);
+            } else
+                Log.d(TAG, "alarm already set : id == " + i);
+        }
     }
-  }
 
 
 }

@@ -13,7 +13,10 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.RemoteInput;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.WindowManager;
 
+import static android.support.v4.app.NotificationCompat.VISIBILITY_PUBLIC;
+import static android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
 import static com.example.shanthiroy.notification01.MainActivity.currentRemId;
 import static com.example.shanthiroy.notification01.MainActivity.question;
 
@@ -21,7 +24,7 @@ public class MyNewIntentService extends IntentService {
     DBHelper mDBHelper;
 
     String TAG = "MyNewIntentService";
-   // final static String GROUP_KEY_EMAILS = "group_key_emails";
+    // final static String GROUP_KEY_EMAILS = "group_key_emails";
 
     public MyNewIntentService() {
         super("MyNewIntentService");
@@ -29,12 +32,12 @@ public class MyNewIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Log.d(TAG,"onHandleIntent");
-        int currentID = intent.getIntExtra("currentID",0);
-        Log.d(TAG,"current id : "+currentID);
+        Log.d(TAG, "onHandleIntent");
+        int currentID = intent.getIntExtra("currentID", 0);
+        Log.d(TAG, "current id : " + currentID);
 
-      //  String KEY_REPLY = "key_reply";
-       // Notification.Builder builder = new Notification.Builder(this);
+        //  String KEY_REPLY = "key_reply";
+        // Notification.Builder builder = new Notification.Builder(this);
         //builder.setContentTitle("My Title");
         //builder.setContentText("This is the Body");
         //builder.setSmallIcon(R.drawable.ic_add_alert_black_24dp);
@@ -51,10 +54,13 @@ public class MyNewIntentService extends IntentService {
         mDBHelper = new DBHelper(this);
 
 
-        Intent intent2 = new Intent(getApplicationContext(),NextActivity.class);
-        intent2.putExtra("currentID",currentID);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, currentID+3000, intent2, 0);
+        Intent intent2 = new Intent(getApplicationContext(), NextActivity.class);
+        intent2.putExtra("currentID", currentID);
+
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, currentID + 3000, intent2, 0);
+
 
 //        String replyLabel = "Enter your reply here";
 //
@@ -71,28 +77,34 @@ public class MyNewIntentService extends IntentService {
 //                .setAllowGeneratedReplies(true)
 //                .build();
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 
-        builder.setAutoCancel(true);
-        builder.setTicker("this is ticker text");
-        builder.setContentTitle(mDBHelper.getQuestion(currentID));
-        builder.setContentText("Click to answer");
-        builder.setSmallIcon(R.drawable.ic_add_alert_black_24dp);
-        builder.setContentIntent(pendingIntent);
-        builder.setOngoing(true);
-        builder.setSubText(" ");   //API level 16
-        builder.setNumber(100);
-       // builder.setGroup(GROUP_KEY_EMAILS);
-        builder.build();
+        if(mDBHelper.idCheckExisting(currentID)) {
 
+            Log.d(TAG,"id exists");
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
 
-        //builder.addAction(replyAction);
-
-       Notification notificationCompat =builder.build();
-        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
-        managerCompat.notify(currentID+100, notificationCompat);
+            builder.setAutoCancel(true);
+            builder.setTicker("this is ticker text");
+            builder.setContentTitle(mDBHelper.getQuestion(currentID));
+            builder.setContentText("Click to answer");
+            builder.setSmallIcon(R.drawable.ic_add_alert_black_24dp);
+            builder.setContentIntent(pendingIntent);
+            builder.setOngoing(true);
+            builder.setSubText(" ");   //API level 16
+            builder.setNumber(100);
+            builder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+            // builder.setGroup(GROUP_KEY_EMAILS);
+            builder.build();
 
 
+            //builder.addAction(replyAction);
+
+            Notification notificationCompat = builder.build();
+            NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
+            managerCompat.notify(currentID + 100, notificationCompat);
+        }
+        else
+            Log.d(TAG,"id deleted");
 
 
 

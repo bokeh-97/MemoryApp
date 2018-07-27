@@ -101,6 +101,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public String getQuestion(int id){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("Select * from questionbank where id = ?",new String[]{String.valueOf(id)});
+
         cursor.moveToFirst();
         Log.d(TAG,"question with "+id+cursor.getString(1));
 
@@ -120,8 +121,8 @@ public class DBHelper extends SQLiteOpenHelper {
             String id = res.getString(0).toString();
             String question = res.getString(1).toString();
             String answer = res.getString(2).toString();
-            String reminder_set = res.getString(3).toString();
-            Reminder_item rem_item = new Reminder_item(id, question, answer, reminder_set);
+
+            Reminder_item rem_item = new Reminder_item(id, question, answer);
             reminder_items.add(rem_item);
         }
 
@@ -152,13 +153,7 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.moveToLast();
         return Integer.parseInt(cursor.getString(0));
  }
-
-
-
-
-
-
-    // to compare 2 Time
+ // to compare 2 Time
 
     public boolean compareTime(String a, String b){
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
@@ -219,6 +214,42 @@ public class DBHelper extends SQLiteOpenHelper {
         return true;
 
     }
+
+    // Delete row
+
+    public boolean deleteReminder(int id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete("questionbank","id = ?",new String[]{String.valueOf(id)});
+        Dashboard.getInstance().setGridView();
+        return true ;
+    }
+
+    // get id from position
+
+    public int getIdFromPos(int pos){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("Select * from questionbank",null);
+        cursor.moveToPosition(pos);
+        return Integer.parseInt(cursor.getString(0));
+
+    }
+
+    // check if id exists in db
+
+   public boolean idCheckExisting(int i){
+        boolean isExisting = false;
+       SQLiteDatabase db = this.getReadableDatabase();
+       Cursor cursor = db.rawQuery("Select * from questionbank",null);
+       while(cursor.moveToNext()){
+           if(Integer.parseInt(cursor.getString(0))==i){
+               isExisting = true;
+               break;
+           }
+       }
+
+       return isExisting;
+
+   }
 
 
 }
